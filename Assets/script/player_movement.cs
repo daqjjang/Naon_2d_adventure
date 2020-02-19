@@ -30,6 +30,8 @@ public class player_movement : MonoBehaviour {
     float temp_gap_y;
     Vector3 jump_stop;
     public bool isJumpkick=false;
+    public float jump_delay = 0.0f;
+    bool after_jump = false; 
 
     Vector3 movement;
 
@@ -88,16 +90,17 @@ public class player_movement : MonoBehaviour {
             
           
         }
-        else if (Input.GetKey(KeyCode.Space) && !isJumping && hit_combo == 0)
+        else if (Input.GetKey(KeyCode.Space) && !isJumping && punch == 0 && !after_jump)
         {
+          
             axisY = transform.position.y;
             isJumping = true;
-
             rigidbody_j.gravityScale = 2.0f;
             rigidbody_j.WakeUp();
             rigidbody_j.AddForce(new Vector2(100.0f * x_input, jumpforce));
-
-            n_animator.SetInteger("Jump", 1);
+                n_animator.SetInteger("Jump", 1);
+            Debug.Log("jump 1!!");
+            
         }
         else if(Input.GetKeyDown("q")&& isJumping)
         {
@@ -148,7 +151,15 @@ public class player_movement : MonoBehaviour {
                 isJumpkick = false;
             }
         }
-
+        if(after_jump==true)
+        {
+            jump_delay += Time.deltaTime;
+            if(jump_delay>0.2f)
+            {
+                after_jump = false;
+                jump_delay = 0.0f;
+            }
+        }
     }
     void FixedUpdate()
     {
@@ -206,11 +217,11 @@ public class player_movement : MonoBehaviour {
         {
             n_animator.SetInteger("Jump", 2);
         }
-        else if (isJumping == true && transform.position.y <= axisY+0.05f )
+        else if (isJumping == true && transform.position.y <= axisY+0.05f && temp_gap_y < 0.0f)
         {
             OnLanding();
             Debug.Log("OnLanding");
-            
+            after_jump = true;
  
         }
 
@@ -232,7 +243,7 @@ public class player_movement : MonoBehaviour {
         n_animator.SetInteger("Jump", 0);
         temp_gap_y = 0;
         pre_y = 0;
-
+        
     }
     bool IsGrounded()
     {
