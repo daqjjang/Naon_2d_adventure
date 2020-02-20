@@ -17,7 +17,7 @@ public class player_movement : MonoBehaviour {
     [SerializeField]
     private float char_speed = 2.0f;
 
-    private player_animation _Player_anim;
+    private Attack_effect _effect_anim;
     public SpriteRenderer _Player_sprite;
     public Animator n_animator;
 
@@ -57,7 +57,7 @@ public class player_movement : MonoBehaviour {
     }
     void Start() {
         //       _rigid = GetComponent<Rigidbody2D>();
-        _Player_anim = GetComponent<player_animation>();
+        _effect_anim = GetComponent<Attack_effect>();
         n_animator = GetComponentInChildren<Animator>();
 
         _Player_sprite = GetComponentInChildren<SpriteRenderer>();
